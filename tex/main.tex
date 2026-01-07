@@ -1,0 +1,463 @@
+\documentclass{article}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{mathrsfs,amsmath}
+
+\usepackage{mathtools}
+\usepackage{amsfonts}
+\usepackage{biblatex}
+\bibliography{../BIB}
+
+\title{Modeling Ecological Interactions: A study on Lotka-Volterra ODEs  and Their Implications Explored through Algebraic and Numerical Methods}
+\date{December 8 2023}
+
+\author{Pablo Santos Guerrero}
+\begin{document}
+
+\maketitle
+\begin{center}
+\textbf{Word Count} : 2915
+\end{center}
+
+
+\newpage
+\tableofcontents
+\newpage
+\section{Introduction}
+When studying and interpreting data relating populations and other significant statistics, investigators often look for ways to evaluate and furthermore predict the trend. A great example of an  interaction between different species is the interesting transformation of the populations of two animals: a Prey and a Predator.The models described for these types of populations are known as competition models and were first recognized by mathematicians in the XXth.
+\par
+The Model of competition I will be utilising in this exploration was developed by two mathematicians: Alfred Lotka and Vito Volterra. It consists of a pair of ordinary differential equations which are interdependent; they are connected by the effect that the amount of both populations in aggregate have on each individual population $^{\textrm{\footnotesize\cite{Lotka-Volterra-Model}}}$. For any model to work, it must be developed inside a controlled system; one can set given conditions to simplify the equations like assuming that the system only includes both animals, or that the effect of the environment is negligible, etc.
+\par
+Under the assumption that there is given conditions, one can deduce a pair of equations to predict the oscillation of the populations with time. The equations were known later as the Lotka-Volterra model, because it was independently studied by both mathematicians.
+\par
+The focus of this IA is to dissect the Lotka-Volterra model by studying its advantages and limitations to then compare its accuracy against the populations of a prey and a predator. To do so, the exploration will focus on finding algebraic and numerical solutions to the models with increasing use of technology to interpret and understand how the system reacts.
+
+
+\section{Overview}
+Since the model focuses on studying how 2 populations change over time, the method proceeds by investigating the rates of change of population X and population Y with respect  to time. Since both populations will be interdependent, we look for a system of equations that produces 2 population curves:
+
+$$\frac{dx}{dt} = f(x,y)$$
+$$\frac{dy}{dt} = g(x,y)$$
+
+with solutions $F(t) = x$ and  $G(t) = y$. The functions $F$ and $G$ will adapt depending on the assumptions or the model. First, the model will be simply focused on finding the stable points of the system, this is the populations at which both species don't change.
+\subsection{Assumptions}
+\begin{itemize}
+    \item[\textbf{Condition 1:}] 
+    The food supply of the prey is assumed to be infinite and perfectly efficient. The model concerns the effect that both populations have only, so other effects that may change the population of the prey such as health risks or famine. This also asserts that without intervention of predators, the prey will exhibit exponential growth over time.
+    \item[\textbf{Condition 2:}]
+    The model does not consider the effect of the environment, or seasonal changes in the ecosystem because of time. The effect of the species could be lost or dissipated due to other factors like changes in temperature, precipitation,  migration trends or dispersion of populations.
+   \item[\textbf{Condition 3:}] 
+   Effect of other animals (Other common predators or preys) on the populations of the prey and predator being studied should not be considered: It would imply considering another unknown time/population equation. For example: Another  available prey may lead to predator population changing their preferences in consumption which would imply an increase in population of first prey.
+   \item[\textbf{Condition 4:}]
+   The predator can only subsist via consumption of the prey. This is an implication from \textbf{Condition 3}, it allows the model to behave competitively between predators but strictly within the prey population. One can deduce then that the higher the population of the predator, the environment becomes more competitive and because of lack of food supply, the population decays. If a predator for example, is a herbivore and can subsist by consuming a plant, the population of the prey will drastically change if the plant is present or not.
+   \item[\textbf{Condition 5:}]
+   The populations are mixed in the environment, meaning there is no particular distribution in density of populations and specific attack patterns depending on differences in population. This is so that the interaction rate of the species is more dependent on the size of the populations in general, rather than their spatial distribution.
+\end{itemize}
+
+\subsection{Prey}
+To find an expression for $\frac{dx}{dt} = f(x,y)$, the assumptions are used to see how $x$ changes with time. Initially, if there is no predator present, From \textbf{Condition 1}, the prey's population rate of increase is not limited anything, meaning that the higher the population of preys, the easier it is to reproduce. The prey is prolific and the time rate of change of the population is directly proportional to the population itself. This implies that:
+\begin{equation}   \label{eq:1}
+\frac{dx}{dt}= px \quad \textrm{for all} \quad p\in\mathbb{R}^+.
+\end{equation}
+
+
+
+This linear ordinary differential equation can be solved using separation of variables with the following procedure:
+
+$$\frac{dx}{x} = p\hspace{0.25em}dt$$
+$$\int\frac{dx}{x} = \int p\hspace{0.25em}dt$$
+$$\textrm{\textrm{ln}}(x) = pt + c \quad \textrm{for all} \quad c \in \mathbb{R}^+ $$
+$$\textrm{ln}(x) = pt + c $$
+$$e^{\textrm{ln}(x)} = x = e^{pt + c}$$
+\begin{equation} \label{eq:2}
+  x(t) = Ae^{pt} \quad \textrm{and} \quad A = e^c
+\end{equation}
+
+This solution provides an explicit function for the population of the prey and can be used to visually interpret the population change when time progresses. Figure 1 from Desmos provides an example of a population curve with arbitrary values for $A$ and $p$ and the domain $t \geq 0$:
+
+\begin{figure}[h]
+\caption{Independent Prey population}
+\centering
+\includegraphics[width=0.7\textwidth]{../images/limit_to_infinity.png}
+\end{figure}
+
+
+However, the prey’s total population is also affected by the frequency of interactions between prey and predators. The predators consume prey and so if the frequency of interaction is higher than expected the population of the prey will drop because of it. This is dependent on both population sizes; if either of the populations is large, the animals will interact irregardless of the other population as long as it isn't zero. For our equation (1) to still be applicable, the total population must equal the independent population minus prey population lost because of interaction with predators. Thus the differential equation becomes:
+\begin{equation} \label{eq:3}
+\frac{dx}{dt} = ax - bxy = x(a - by).
+\end{equation}
+
+ 
+The expression $bxy$ suits our context because of 3 main reasons:
+\begin{itemize}
+    \item 
+    If either of the populations becomes 0 the equation $(3)$ returns to equation $(1)$. If the population of predator is 0 then y = 0; the negative effect would cancel and thus the predator has no effect on the prey, returning to $(1)$. If prey population is 0, then the equation disappears.
+    \item 
+     Although populations may have relatively different population sizes, the product bypasses the type of animal, meaning that even if one of the populations is very small, if the other population is high enough the frequency of interaction will still be considerably high and will affect the prey population.
+     \item 
+     The scalar $b$ can be used to describe the ability and effectiveness of predators capturing and consuming the prey. It could be the number of successful predator attacks divided by the total number of prey-predator encounters.
+     \item 
+     The expression $xy$ is proportional to the predation rate; it is representative of the relationship between the number of interactions and the size of the population of the species.    
+\end{itemize}
+
+\subsection{Predator}
+The differential equation is based on the condition that the predator can only subsist on the prey’s population. The predator population will rely on the prey because if the prey population is non-existent or minimal, the predators will have negative retaliation to scarce resources leading to a decreasing population function. Specifically, if the predator population changes, the competition between predators of the same species will change proportionally to the population. With time, the rate of change of population will be proportional to the negative population. The equation
+
+\begin{equation} \label{eq:4}
+\frac{dy}{dt}= -sy \quad \textrm{for all} \quad s\in\mathbb{R}^+.
+\end{equation}
+
+describes such a population trend and has almost an identical solution to equation $(1)$
+\begin{equation} \label{eq:5}
+  y(t) = Be^{-st} \quad \textrm{and} \quad B = e^d, d\in\mathbb{R}^+
+\end{equation}
+The graph for equation five is seen below (Figure 2) plotted on Desmos for values of $t \geq 0$ .
+
+\begin{figure}[h]
+\caption{Independent predator population}
+\centering
+\includegraphics[width=0.7\textwidth]{../images/limit_to_zero.png}
+\end{figure}
+
+The function for y  is analytically described as exponentially decaying. The population has a decreasing rate of change because the range of y’(t) is always negative.
+\par
+Similarly to the Prey, the predator is also affected by the rate of encounters with the prey and thus the differential equation used the product of the populations $xy$ however, the effect is positive towards the total population, since predators will use prey to survive, if the frequency of interaction  of the species were to increase, the population of the predators would benefit from it either way.
+The differential equation used to model the population is:
+
+\begin{equation} \label{eq:6}
+\frac{dy}{dt} = rxy - sy= y(cx - d).
+\end{equation}
+
+$$r, s \in \mathbb{R}^+$$
+
+\section{Interaction}
+As seen above the two populations can be modelled using equations (3) and (6). The equations are:
+
+\begin{equation} \label{eq:7}
+\frac{dx}{dt} = x(a - by).
+\end{equation}
+
+
+\begin{equation} \label{eq:8}
+\frac{dy}{dt} = y(cx - d).
+\end{equation}
+
+From the response in each population, it is possible to predict how the populations would interact. For instance, we know that the population of the predator will decay exponentially but if it were to be affected by a very large number of interactions with prey, its population would reach a positive rate of change with respect to time. On the other hand, the prey population may normally exhibit exponential growth but due to the predator's consumption, the trend will be limited by the frequency of interaction between the species.
+
+\subsection{Algebraic Approach}
+
+\subsubsection{Stable Points}
+The stable point in a system of differential equations, refers to any point with the property such that if any solution to the equation were to have initial conditions relatively close to the point, then the path for the solution will remain relatively close to the stable point. 
+
+This point is found when the population is not changing at all, For $\frac{dx}{dt}$ and $\frac{dy}{dt}$, find the maximum populations for the given system, by equating the differential equations to zero and solve for the corresponding population values. In general, for equations (7) and (8)
+
+\begin{equation} \label{eq:9}
+\frac{dx}{dt} = 0 \implies  y = \frac{a}{b}
+\end{equation}
+and
+
+\begin{equation}
+    \frac{dy}{dt} = 0 \implies  x = \frac{d}{c}
+\end{equation}
+
+
+Solve  for both equations to find population number for each animal to maximize the other animal's population:
+
+$$x(a - by) = 0$$
+$$a - by = 0$$
+$$by = a$$
+$$y = \frac{a}{b}$$
+$$x = 0$$
+
+and for  the predators population,
+
+$$y(cx - d) = 0$$
+$$cx - d = 0$$
+$$cx = d$$
+$$x = \frac{d}{c}$$
+$$ y = 0$$
+
+It is important to identify the solution $(x = 0, y = 0)$ for the system because of the fact that if both populations are zero, there is no factor which would provide any sort of growth to both species. The two stable points are:
+
+\begin{equation}
+    ( \frac{d}{c}, \frac{a}{b}) \quad \textrm{and} \quad (0, 0) 
+\end{equation}
+ 
+ 
+\subsubsection{Predator against Prey population}
+
+The interaction between the animals can be algebraically analysed using the rate of change of a population against the other, given the conditions stated earlier. Using the chain rule for differentiation the rate of change of the predator with respect to the prey can be found using both time expressions:
+
+$$\frac{dy}{dx} = \frac{dy}{dt} \hspace{0.25em} \frac{dt}{dx} = \frac{dy}{dt} \hspace{0.25em} (\frac{dx}{dt})^{-1}.$$
+
+Substitute equations $(7)$ and $(8)$ into expressions to get
+\begin{equation} \label{eq:11}
+    \frac{dy}{dx} =\frac{y(cx-d)}{x(a-by)}.
+\end{equation}
+
+Equation (9) can be separated by variables to derive an equation containing $y$ and $x$
+
+$$\frac{(a-by)\hspace{0.25em}dy}{y} = \frac{(cx-d)\hspace{0.25em}dx}{x}$$
+
+Simplifying,
+
+$$(\frac{a}{y} - b) \hspace{0.25em} dy = (c- \frac{d}{x}) \hspace{0.25em} dx$$
+
+Integrating both sides,
+
+$$ \int\frac{a}{y} - b \hspace{0.25em} dy = \int c- \frac{d}{x}\hspace{0.25em} dx$$
+$$ a\int\frac{1}{y}\hspace{0.25em}dy - \int b \hspace{0.25em} dy = \int c \hspace{0.25em} dx - d\int\frac{1}{x}\hspace{0.25em}dx$$
+
+\begin{equation}
+    a\hspace{0.25em}\textrm{ln}(y) - by  + C= cx -d \hspace{0.25em} \textrm{ln}(x), \quad C\in \mathbb{R}^+
+\end{equation}
+
+
+This equation can be simplified by taking the exponent on both sides by the Euler's constant:
+
+$$e^{a\hspace{0.25em}\textrm{ln}(y) - by + C} = e^{cx -d \hspace{0.25em} \textrm{ln}(x)}$$
+$$e^{\hspace{0.25em}\textrm{ln}(y^a)}e^{- by}e^{C} = e^{cx}  e^{-\hspace{0.25em}\textrm{ln}(x^d)} $$
+\begin{equation}
+   K \frac{y^a}{e^{by}} = \frac{e^{cx}}{x^d}, \quad K = e^C.
+\end{equation}
+
+We've derived two functions; they are proportional to each other by $K$. For functions$$f(y) = \frac{y^a}{e^{by}} \quad  \textrm{and} \quad
+g(x) = \frac{e^{cx}}{x^d}$$
+ it holds that:
+\begin{equation}
+   K f(y) = \cdot g(x) 
+\end{equation}
+
+Equation (10) can be plotted using Desmos to get a visual representation of the dynamic change of the populations with specific $a,b,c,d$ values. The maximum values are found using $f'(y) = 0$ and $g'(x) = 0$, similar to using 
+\par
+I let the parameters be any arbitrary value between 0 and 1,  $a = 0.1 \quad b= 0.02 \quad c = 0.01 \quad d = 0.3$ then if we plot equation (13), with initial conditions $(x = 40, y = 9) $,
+
+$$ C = -0.01(40) + 0.3 \textrm{ln}(40) + 0.1\textrm{ln}(9) - 0.02(9) = 0.74639 \quad (\textrm{5sf})$$
+
+
+The following curve is the result and the maximum for both populations is found via statements (9) and (10), as well as using the solution to $f$ and $g$'s derivative function. The equation is written in the following form:
+
+$$cx - d\textrm{ln}(x) - C = a \textrm{ln}(y) - 0.02y$$
+
+
+%Diagram 1
+\begin{figure}[h]
+\caption{Table for Desmos curves}
+\centering
+\includegraphics[width=0.6\textwidth]{../images/DESMOS_table.png}
+\end{figure}
+
+%Diagram 2
+\begin{figure}[t!]
+\caption{Equation for Predator against Prey with Maxima and minima}
+\centering
+\includegraphics[width=0.7\textwidth]{../images/PredatorVPrey_desmos.png}
+\end{figure}
+
+The Graph provides enough insight to find both maximum and minimum populations. For example the highest and lowest prey population is when predators are at population $y = 5$. On the other hand, predators are at max/min population when prey population is at $x = 30$; this corroborates with (11). Proceed by using the $GDC$ to graph both equations and find both solutions:
+
+\textbf{Predator:}
+$$ 0.01(30) - 0.3\textrm{ln}(30) + 0.74639 =  0.1 \textrm{ln}(y) - 0.02y$$
+$$ y_{\textrm{max}} = 10.4 \quad \textrm{3sf} $$
+$$ y_{\textrm{min}} = 1.90 \quad \textrm{3sf} $$
+$\quad \textbf{Prey:}$
+$$ 0.01(x) - 0.3 \textrm{ln}(x) + 0.74639 =  0.1 \textrm{ln}(5) - 0.02(5)$$
+$$x_{\textrm{max}} = 46.9 \quad \textrm{3sf}$$
+$$x_{\textrm{min}} = 17.8 \quad \textrm{3sf}$$
+
+
+
+ 
+
+\subsubsection{Analysis}
+ Both functions provide a general idea of the response on each population with respect to the other. However, the effect of time is unseen and the direction of flow for the circular path in the diagram is unknown. Using equations (2) and (5) for isolated populations, the general trend for the populations can be observed since for example, the predator population will tend to zero if the starting conditions have  $0$ population for the prey since the population will as equation (5) since:
+
+
+ \[ \lim_{t \to \infty} Be^{-st} = 0 \]
+
+ This can also be interpreted visually when plotting the curve $Be^{st}$ Figure 2 for equation (5):
+ 
+ Similarly, if the starting predator population were to be 0, as t approaches infinity, using equation (2) and complemented by Figure 1,  the prey population will tend to infinity
+ 
+ \[ \lim_{t \to \infty} Ae^{pt} = \infty \]
+
+ 
+Both of these effects help to identify the anti-clockwise motion of the populations with respect to time. The phase diagram created by the system of differential equations, is similar to a vector field  with respective directions at each interval of the populations. This allows the prediction of the movement of populations given a set of initial conditions at each interval. The following Figure 5 shows a phase diagram for an arbitrary pair of equations with parameters $a = 0.1 \quad b= 0.02 \quad c = 0.01 \quad d = 0.3$ and unknown initial conditions like (7) and (8).
+
+ %Diagram 3
+\begin{figure}[h]
+\caption{Phase Diagram for pair of ODEs with Stable POints}
+\centering
+\includegraphics[width=0.7\textwidth]{../images/StablePoints.png}
+\end{figure}
+
+This plot, is particularly important because it allows the prediction of how stable points affect the motion of population with time and how they behave when reaching a stable point.
+Figure 3 shows a Phase diagram including the stable points as well as different arrow lengths to represent the magnitude of change at that specific point.
+
+\subsubsection{Limitations}
+Unfortunately following an algebraically exact and precise model  is only going to allow a limited amount of knowledge to be gained from the system. This is because there is no algebraic expression or mathematical function that can describe perfectly the general solutions to equations:
+
+\begin{equation} 
+\frac{dx}{dt} = x(a - by)
+\end{equation}
+
+
+\begin{equation} 
+\frac{dy}{dt} = y(cx - d).
+\end{equation}
+
+Thus this approach limits the results to finding: Stable points, Maximum populations, response to time and trend for change with respect to $t$ (anticlockwise and periodic movement), and proportional relationship between functions $f$ and $g$ from equation (15). The best way to gain insight on the effect of time would be using a numerical method to approximate the solution to the equations.
+
+\subsection{Numerical Approach}
+
+\subsubsection{Euler's Step Method}
+From previously, both populations have periodic movement against time from interpreting the Phase diagram. However to dissect the problem, Euler's Step Method will provide the best understanding on how the populations change with time. The method is setup using initial conditions, a step size, and extending the function a finite number of iterations, by solving for the next $n+1$-th iteration using the $n$-th iteration and its gradient at that point. The equations for a single ODE with initial conditions $(x_0, y_0)$ and step size of $h$:
+
+$$ x_{n + 1} = x_n + h$$
+$$ y_{n+1} = y_n + h j(x_n, y_n)$$
+for $j(x_n, y_n) = \frac{dy}{dx} \quad \textrm{evaluated at} \quad (x_n, y_n)$
+
+\subsubsection{Step Method for system of ODEs}
+For the step method of animal interactions, the derivatives will be with respect to $t$. Contrary to single ODEs, to set up a system of equations with Euler's step method, 3 main changes must be done:
+
+\begin{itemize}
+    \item[\textbf{(1):}] The new independent variable is now $t$. This is because both populations $x$ and $ y$ (prey and predator respectively) are going to be compared against time to produce the solution to the system of differential equations.
+    \item[\textbf{(2):}] Because $x_n$ is now our prey population $x_n$ at the $n$-th interval, instead of $x_{n + 1} = x_n + h$, the equation for the $n+1$-th step must also contain a function $r(x_n,y_n) = \frac{dx}{dt}$ 
+    \item[\textbf{(3):}] Both terms $\frac{dx}{dt}, \frac{dy}{dt}$ are dependent on both populations, thus both terms are required to evaluate the derivatives at $(x_n, y_n)$  and calculate both steps, so it is necessary to build both populations simultaneously at each step.
+\end{itemize}
+
+The new Equations for each $n+1$-th term is as follows:
+
+
+    $$t_{n + 1} = t_n + h$$
+\begin{equation}
+    x_{n + 1} = x_n + h \, r(x_n, y_n)
+\end{equation}
+    
+\begin{equation}
+    y_{n+1} = y_n + h \, j(x_n, y_n)
+\end{equation}
+    
+
+Since $r(x_n,y_n) = \frac{dx}{dt}$ and $g(x_n,y_n) = \frac{dy}{dt}$, substituting equations (7) and (8) to equation (16) and (17) respectively gives out:
+
+$$x_{n + 1} = x_n + h \, x_n(a -by_n)$$
+$$y_{n + 1} = y_n + h \, y_n(cx_n -d)$$
+
+$$\Longleftrightarrow$$
+
+
+\begin{equation}
+    t_{n + 1} = t_n + h
+\end{equation}
+\begin{equation}
+   x_{n + 1} = x_n(1 + h \, (a -by_n))
+\end{equation}
+\begin{equation}
+   y_{n + 1} = y_n(1 + h \,(cx_n -d)) 
+\end{equation}
+
+The setup for the method would be as follows for the values of $n=0, 1$ to find the values of $(x_n,y_n)$:
+
+$ \textbf{n = 0} \quad : Let \quad t=0, \quad \textrm{then} \quad (x = x_0 , y = y_0)$
+$$r(x_0, y_0) = x_0(a - by_0)$$
+$$j(x_0, y_0) = y_0(cx_0 - d)$$
+$$ x_1 = x_0(1 + h \, (a -by_0))$$
+$$ y_1 = y_0(1 + h \,(cx_0 -d)) $$
+
+$$ \textbf{n = 1} \quad: t= h, (x = x_1 , y = y_1)$$
+$$ r(x_1, y_1) = x_0(1 + h \, (a -by_0))(a - by_0(1 + h \,(cx_0 -d))) $$
+
+$$ j(x_1, y_1) = y_0(1 + h \,(cx_0 -d))(cx_0(1 + h \, (a -by_0)) - d)$$
+
+$$ x_2 = x_0(1 + h \, (a -by_0))(1 + h \, (a -by_0(1 + h \,(cx_0 -d))))$$
+$$ y_2 =  y_0(1 + h \,(cx_0 -d))(1 + h \,(cx_0(1 + h \, (a -by_0)) -d)) $$
+
+
+
+This way the populations can be generated up to the specific time frame $t_i = n \times h$; $h$ defines how precise the plot will be. If a sufficiently small value $\epsilon$ is taken for $h$, and a sufficiently large value is taken for $n$, the plot generated by the step method will be similar to a continuous curve. 
+\subsubsection{Example Graph:}
+Below (on Figure 6) are shown the diagrams for both populations, Prey and Predator against time, solved using python [odeint (from "scipy" module)] function with values $ h = \epsilon \, , n = \sigma $.
+The conditions used for the algebraic approach remain constant so $a = 0.1 \quad b= 0.02 \quad c = 0.01 \quad d = 0.3$ and the initial conditions  will be $(x = 40, y = 9) $.
+
+\begin{figure}[h!]
+\caption{ Euler's Step Method Populations against time Plots}
+\centering
+\includegraphics[width=0.7\textwidth]{../images/timePop.png}
+\end{figure}
+
+\paragraph{ Step Method Table:}
+
+The following table shows the first 10 values for Euler's step method for a step value of 1. As $h \to \epsilon$, the table will become more precise. 
+\par
+The calculations were done using a  Casio $GDC$ with the recursion function starting at $a_0 = 0, b_0 = 40, c_0 = 9$
+Input was the following:
+$$ t: \quad a_{n+1} = a_n + 1 \quad \textrm{ START = 0, END = 10}$$
+$$ x: \quad b_{n+1} = b_n(1 + (0.1-0.02c_n))$$
+$$ y: \quad c_{n+1} = c_n(1 +(0.01b_n - 0.3))$$
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+$t_n$ & $x_n$ & $y_n$  \\
+\hline
+0 & 40 & 9  \\
+\hline
+1 & 36.8 & 9.9   \\
+\hline
+2 & 33.19 & 10.57   \\
+\hline
+3 & 29.49 & 10.91 \\
+\hline
+4 & 26.01 & 10.86 \\
+\hline
+5 & 22.96 & 10.42  \\
+\hline
+6 & 20.47 & 9.69 \\
+\hline
+7 & 18.55 & 8.77 \\
+\hline
+8 & 17.15 & 7.76 \\
+\hline
+9 & 16.21 & 6.76 \\
+\hline
+10 & 15.63 & 5.83  \\
+\hline
+\end{tabular}
+\end{center}
+Similarly, using the expression for $\frac{dy}{dx}$ one can use the step method to derive a plot for Predator population against Prey population, as shown in Figure 7 .
+
+\begin{figure}[h!]
+\caption{}
+\centering
+\includegraphics[width=0.7\textwidth]{../images/Population.png}
+\end{figure}
+
+
+
+
+\subsection{Evaluation}
+
+ Both methods provide different types of insight as well as establish a congruence between methods to assure that the model is reliable. Many of the results which corroborated includes: minimum and maximum values for both populations; Anti clockwise motion for both interpretation in the motion of the phase diagram. Thankfully, Euler's method Also allowed me to find an  approximate value for the period of oscillation for both populations using the graph and subtracting the time difference between maxima. 
+ the prey oscillation:
+ $$T_x = t_{x_{max2}} - t_{x_{max1}}$$
+ $$ T_x = 41.9 - 3.5 = 38.4 $$
+
+ the predator oscillation:
+ $$T_y = t_{y{min2}} - t_{y{min1}}$$
+ $$ T_y = 50.7 - 12.3 = 38.4 $$
+ In fact  $T_y = T_x $
+
+ \par
+ Furthermore , it is possible to plot  the expected values for the against the actual values for each population for actual species populations and produce a trend line to analyse its correlation coefficient and the accuracy of the model.
+ This instance of the system of equations is rather simple compared to the actual context in which these animals live in. Other models of the Lotka-Volterra which ere developed later on started to include other limitations such as seasonal changes in predation rate, maximum capacity for population, other species to interact with but its complexity rises rather quickly.
+
+ 
+ \section{Conclusion}
+ The Lotka-Volterra model works in a fascinating way to quickly and simply elaborate a competitive model between two populations. The system of differential equations allows mathematicians to gain information on constantly changing environments to better understand the nature of such scientific processes.  Models like this, exist in all areas of science to predict and comprehend most physical investigations. In nature, there are countless examples of different pairs of species which interact on massive scales with such a relationship, including the Lynx and Snowshoe Hare relationship, polar bears and seals, amongst many others. That is why different mathematicians and biologists developed several ways to understand the way that populations of the two different animals may change over time. Although not all models can be studied exactly, using numerical methods and complementing findings from different sources is the best way to understand and create the empirical substance within these systems.
+ 
+ 
+\printbibliography[title = References]
+
+\end{document}
+
